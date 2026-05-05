@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      submissions: {
+        Row: {
+          appliances: string[] | null
+          areas: string[] | null
+          booked_date: string | null
+          booked_time: string | null
+          created_at: string
+          email: string | null
+          first_name: string | null
+          id: string
+          lead_source: string | null
+          phone: string | null
+          status: string
+          team_size: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          appliances?: string[] | null
+          areas?: string[] | null
+          booked_date?: string | null
+          booked_time?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          lead_source?: string | null
+          phone?: string | null
+          status?: string
+          team_size?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          appliances?: string[] | null
+          areas?: string[] | null
+          booked_date?: string | null
+          booked_time?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          lead_source?: string | null
+          phone?: string | null
+          status?: string
+          team_size?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
