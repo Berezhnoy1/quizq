@@ -76,10 +76,10 @@ export const Quiz = () => {
   const next = () => { setDirection("fwd"); setStep((s) => Math.min(s + 1, TOTAL)); };
   const back = () => { setDirection("back"); setStep((s) => Math.max(s - 1, 1)); };
 
-  const toggle = (key: "appliances" | "areas", v: string) =>
+  const toggleArea = (v: string) =>
     setState((s) => ({
       ...s,
-      [key]: s[key].includes(v) ? s[key].filter((x) => x !== v) : [...s[key], v],
+      areas: s.areas.includes(v) ? s.areas.filter((x) => x !== v) : [...s.areas, v],
     }));
 
   const submit = async () => {
@@ -94,10 +94,8 @@ export const Quiz = () => {
         first_name: state.first_name.trim(),
         phone: state.phone.trim(),
         email: state.email.trim(),
-        appliances: state.appliances,
         areas: state.areas,
         team_size: state.team_size,
-        lead_source: state.lead_source,
         booked_date: state.slot?.date ?? null,
         booked_time: state.slot?.time ?? null,
         ...utm,
@@ -113,7 +111,7 @@ export const Quiz = () => {
               firstName: state.first_name,
               email: state.email,
               phone: state.phone,
-              notes: `Appliances: ${state.appliances.join(", ")}\nAreas: ${state.areas.join(", ")}\nTeam: ${state.team_size}\nSource: ${state.lead_source}`,
+              notes: `Areas: ${state.areas.join(", ")}\nTeam: ${state.team_size}`,
             },
           });
           trackSchedule();
@@ -131,6 +129,9 @@ export const Quiz = () => {
   };
 
   const showBack = step > 1 && step < TOTAL;
+  // Progress numbering: exclude intro (1) and final (7); show as 1..5
+  const progressTotal = TOTAL - 2;
+  const progressStep = step - 1;
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -147,7 +148,7 @@ export const Quiz = () => {
                 <ArrowLeft className="h-5 w-5 text-muted-foreground" />
               </button>
             ) : <div className="w-9" />}
-            <div className="flex-1"><ProgressBar step={step} total={TOTAL} /></div>
+            <div className="flex-1"><ProgressBar step={progressStep} total={progressTotal} /></div>
           </header>
         )}
 
@@ -155,24 +156,13 @@ export const Quiz = () => {
           {step === 1 && <Step1 onNext={next} />}
           {step === 2 && <Step2 onNext={next} />}
           {step === 3 && (
-            <StepMulti
-              h1="What appliances do you repair?"
-              sub="Select all that apply"
-              options={APPLIANCES.map((a) => ({ id: a.id, label: a.id, Icon: a.icon }))}
-              selected={state.appliances}
-              onToggle={(v) => toggle("appliances", v)}
+            <StepAreas
+              selected={state.areas}
+              onToggle={toggleArea}
               onNext={next}
-              canNext={state.appliances.length > 0}
             />
           )}
           {step === 4 && (
-            <StepAreas
-              selected={state.areas}
-              onToggle={(v) => toggle("areas", v)}
-              onNext={next}
-            />
-          )}
-          {step === 5 && (
             <StepSingle
               h1="How many technicians work in your company?"
               options={TEAMS}
@@ -181,24 +171,14 @@ export const Quiz = () => {
               onNext={next}
             />
           )}
-          {step === 6 && (
-            <StepSingle
-              h1="How do you currently get new clients?"
-              icon={<Search className="h-5 w-5 text-primary" />}
-              options={SOURCES}
-              selected={state.lead_source}
-              onSelect={(v) => setState((s) => ({ ...s, lead_source: v }))}
-              onNext={next}
-            />
-          )}
-          {step === 7 && (
+          {step === 5 && (
             <Step7Booking
               selected={state.slot}
               onSelect={(slot) => setState((s) => ({ ...s, slot }))}
               onNext={next}
             />
           )}
-          {step === 8 && (
+          {step === 6 && (
             <Step8Form
               state={state}
               setState={setState}
@@ -206,7 +186,7 @@ export const Quiz = () => {
               onSubmit={submit}
             />
           )}
-          {step === 9 && <Step9 />}
+          {step === 7 && <Step9 />}
         </main>
       </div>
     </div>
