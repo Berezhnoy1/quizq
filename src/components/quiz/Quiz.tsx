@@ -208,7 +208,7 @@ const Step1 = ({ onNext }: { onNext: () => void }) => (
           alt="Appliance repair technician at work in Atlanta"
           width={1024}
           height={1024}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
         />
       </div>
     </div>
