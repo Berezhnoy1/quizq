@@ -18,13 +18,12 @@ import { trackLead, trackPageView, trackSchedule, trackStep } from "@/lib/pixel"
 import { getUTM } from "@/lib/utm";
 import heroImg from "@/assets/hero-technician.jpg";
 
-const TOTAL = 9;
+const TOTAL = 7;
+const QUESTION_STEPS = [3, 4, 5, 6]; // steps that count as "questions" in progress bar
 
 interface QuizState {
-  appliances: string[];
   areas: string[];
   team_size: string;
-  lead_source: string;
   slot: { date: string; time: string; iso: string } | null;
   first_name: string;
   phone: string;
@@ -33,10 +32,8 @@ interface QuizState {
 }
 
 const initial: QuizState = {
-  appliances: [],
   areas: [],
   team_size: "",
-  lead_source: "",
   slot: null,
   first_name: "",
   phone: "+1 ",
@@ -44,19 +41,14 @@ const initial: QuizState = {
   agreed: false,
 };
 
-const APPLIANCES = [
-  { id: "Refrigerator", icon: Refrigerator },
-  { id: "Washer/Dryer", icon: WashingMachine },
-  { id: "Dishwasher", icon: Wrench },
-  { id: "Oven/Range/Stove", icon: Flame },
-  { id: "Microwave", icon: Microwave },
-  { id: "HVAC", icon: Wind },
-  { id: "Other", icon: ChefHat },
+const AREAS: { id: string; img: string }[] = [
+  { id: "North Atlanta", img: mapNorth },
+  { id: "South Atlanta", img: mapSouth },
+  { id: "East Atlanta", img: mapEast },
+  { id: "West Atlanta", img: mapWest },
+  { id: "Mid / Downtown", img: mapMid },
 ];
-
-const AREAS = ["North Atlanta", "South Atlanta", "East Atlanta", "West Atlanta", "Mid / Downtown"];
 const TEAMS = ["Just me (solo)", "2–5 people", "6–10 people", "10+"];
-const SOURCES = ["Thumbtack / Yelp / Angi", "Google Ads", "Word of mouth / referrals", "Other"];
 
 const SERVICES = [
   { label: "Electrical", icon: "⚡" },
