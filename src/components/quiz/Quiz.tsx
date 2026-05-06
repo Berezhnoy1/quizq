@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Refrigerator, WashingMachine, Microwave, Wind, Wrench, Flame, ChefHat, Phone, Star, CheckCircle2, MapPin, Users, Search } from "lucide-react";
+import { ArrowLeft, ArrowRight, Phone, Star, CheckCircle2, MapPin } from "lucide-react";
+import mapNorth from "@/assets/map-north.jpg";
+import mapSouth from "@/assets/map-south.jpg";
+import mapEast from "@/assets/map-east.jpg";
+import mapWest from "@/assets/map-west.jpg";
+import mapMid from "@/assets/map-mid.jpg";
 import { Logo, BQMonogram } from "@/components/quiz/Logo";
 import { ProgressBar } from "@/components/quiz/ProgressBar";
 import { NextButton } from "@/components/quiz/NextButton";
