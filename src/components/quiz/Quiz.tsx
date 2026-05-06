@@ -104,6 +104,24 @@ export const Quiz = () => {
       });
       if (error) throw error;
 
+      const submissionPayload = {
+        first_name: state.first_name.trim(),
+        phone: state.phone.trim(),
+        email: state.email.trim(),
+        areas: state.areas,
+        team_size: state.team_size,
+        booked_date: state.slot?.date ?? null,
+        booked_time: state.slot?.time ?? null,
+      };
+
+      // Google Sheets append (best-effort)
+      supabase.functions.invoke("sheets-append", { body: submissionPayload })
+        .catch((err) => console.warn("sheets-append failed", err));
+
+      // Telegram notification (best-effort)
+      supabase.functions.invoke("telegram-notify", { body: submissionPayload })
+        .catch((err) => console.warn("telegram-notify failed", err));
+
       // Create calendar event (best-effort)
       if (state.slot) {
         try {
