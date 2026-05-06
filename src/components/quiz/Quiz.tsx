@@ -307,18 +307,25 @@ const StepAreas = ({ selected, onToggle, onNext }: {
     </div>
     <div className="grid grid-cols-2 gap-3">
       {AREAS.map((a, i) => {
-        const isSel = selected.includes(a);
+        const isSel = selected.includes(a.id);
         const isLast = i === AREAS.length - 1 && AREAS.length % 2 === 1;
         return (
           <button
-            key={a}
-            onClick={() => onToggle(a)}
+            key={a.id}
+            onClick={() => onToggle(a.id)}
             className={`quiz-card flex flex-col gap-2 items-start ${isSel ? "selected" : ""} ${isLast ? "col-span-2" : ""}`}
           >
-            <div className="w-full aspect-[16/9] rounded-lg bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
-              <MapPin className={`h-8 w-8 ${isSel ? "text-primary" : "text-primary/50"}`} />
+            <div className="w-full aspect-[16/10] rounded-lg overflow-hidden bg-secondary">
+              <img
+                src={a.img}
+                alt={`${a.id} service area map`}
+                width={512}
+                height={512}
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <span className="text-sm font-medium">{a}</span>
+            <span className="text-sm font-medium">{a.id}</span>
           </button>
         );
       })}
