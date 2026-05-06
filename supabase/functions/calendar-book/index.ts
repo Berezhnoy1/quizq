@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
     if (!LOVABLE_API_KEY || !GCAL_KEY) throw new Error("Missing API keys");
 
     const body = await req.json();
-    const { startIso, firstName, email, phone, calendarId = "alexbouch15@gmail.com", notes } = body;
+    const { startIso, firstName, email, phone, calendarId = "primary", notes } = body;
     if (!startIso || !firstName || !email) {
       return new Response(JSON.stringify({ error: "missing fields" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
