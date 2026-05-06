@@ -18,6 +18,7 @@ import { trackLead, trackPageView, trackSchedule, trackStep } from "@/lib/pixel"
 import { getUTM } from "@/lib/utm";
 import heroImg from "@/assets/hero-technician.jpg";
 import bqServices from "@/assets/bq-services.jpg";
+import bqCircle from "@/assets/bq-circle.jpg";
 
 const TOTAL = 7;
 const QUESTION_STEPS = [3, 4, 5, 6]; // steps that count as "questions" in progress bar
@@ -386,66 +387,65 @@ const Step8Form = ({ state, setState, submitting, onSubmit }: {
   state: QuizState; setState: React.Dispatch<React.SetStateAction<QuizState>>;
   submitting: boolean; onSubmit: () => void;
 }) => (
-  <div className="space-y-5">
-    <div>
-      <h1 className="text-2xl font-display font-bold">Almost done!</h1>
-      <p className="text-sm text-muted-foreground mt-1">
-        We'll call you at your selected time to discuss details
-      </p>
-    </div>
+  <div className="-mx-5 px-5 py-6 bg-secondary rounded-2xl space-y-6">
+    <h1 className="text-2xl font-display font-bold text-center leading-tight">
+      Almost done! We'll call you to<br />discuss details
+    </h1>
 
-    <div className="bg-card rounded-2xl p-4 shadow-soft flex items-center gap-3">
-      <BQMonogram size={44} />
+    <div className="flex items-center gap-3">
+      <div className="h-16 w-16 rounded-full bg-white shadow-card overflow-hidden flex items-center justify-center">
+        <img src={bqCircle} alt="Branviq" className="h-12 w-12 object-contain" />
+      </div>
       <div className="flex-1">
-        <div className="font-display font-semibold">Branviq</div>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-          <span>4.5 — your consultant</span>
+        <div className="font-display font-bold text-base">Branviq</div>
+        <div className="flex items-center gap-0.5 mt-1">
+          {[0,1,2,3].map(i => <Star key={i} className="h-4 w-4 fill-primary text-primary" />)}
+          <Star className="h-4 w-4 fill-primary text-primary" style={{ clipPath: "inset(0 50% 0 0)" }} />
         </div>
       </div>
     </div>
 
     <div className="space-y-3">
-      <Field label="First Name *">
-        <Input
-          value={state.first_name}
-          onChange={(e) => setState((s) => ({ ...s, first_name: e.target.value }))}
-          placeholder="John"
-          maxLength={60}
-          className="h-12 rounded-xl"
-        />
-      </Field>
-      <Field label="Phone *">
+      <Input
+        value={state.first_name}
+        onChange={(e) => setState((s) => ({ ...s, first_name: e.target.value }))}
+        placeholder="First Name*"
+        maxLength={60}
+        className="h-14 rounded-xl bg-background border-0 placeholder:text-muted-foreground/70 text-base px-4"
+      />
+      <div className="flex gap-2">
+        <div className="h-14 rounded-xl bg-background flex items-center px-3 gap-1.5 shrink-0">
+          <span className="text-xl">🇺🇸</span>
+          <span className="text-sm font-medium">+1</span>
+          <ArrowRight className="h-3 w-3 rotate-90 text-muted-foreground" />
+        </div>
         <Input
           type="tel"
           value={state.phone}
           onChange={(e) => setState((s) => ({ ...s, phone: e.target.value }))}
-          placeholder="+1 (404) 555-0100"
+          placeholder="(404) 555-0100*"
           maxLength={20}
-          className="h-12 rounded-xl"
+          className="h-14 rounded-xl bg-background border-0 placeholder:text-muted-foreground/70 text-base px-4 flex-1"
         />
-      </Field>
-      <Field label="Email *">
-        <Input
-          type="email"
-          value={state.email}
-          onChange={(e) => setState((s) => ({ ...s, email: e.target.value }))}
-          placeholder="you@example.com"
-          maxLength={120}
-          className="h-12 rounded-xl"
-        />
-      </Field>
+      </div>
+      <Input
+        type="email"
+        value={state.email}
+        onChange={(e) => setState((s) => ({ ...s, email: e.target.value }))}
+        placeholder="Email*"
+        maxLength={120}
+        className="h-14 rounded-xl bg-background border-0 placeholder:text-muted-foreground/70 text-base px-4"
+      />
     </div>
 
     <label className="flex items-start gap-3 cursor-pointer">
       <Checkbox
         checked={state.agreed}
         onCheckedChange={(c) => setState((s) => ({ ...s, agreed: !!c }))}
-        className="mt-0.5"
+        className="mt-0.5 h-5 w-5 rounded data-[state=checked]:bg-primary data-[state=checked]:border-primary"
       />
-      <span className="text-xs text-muted-foreground leading-relaxed">
-        I agree with the <a href="#" className="text-primary underline">terms of use</a> and the{" "}
-        <a href="#" className="text-primary underline">privacy policy</a>
+      <span className="text-sm text-muted-foreground leading-relaxed">
+        I agree with <a href="#" className="text-primary underline">the terms of use and the privacy policy</a> *
       </span>
     </label>
 
