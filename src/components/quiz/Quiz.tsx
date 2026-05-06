@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Refrigerator, WashingMachine, Microwave, Wind, Wrench, Flame, ChefHat, Phone, Star, CheckCircle2, MapPin, Users, Search } from "lucide-react";
+import { ArrowLeft, ArrowRight, Phone, Star, CheckCircle2, MapPin } from "lucide-react";
+import mapNorth from "@/assets/map-north.jpg";
+import mapSouth from "@/assets/map-south.jpg";
+import mapEast from "@/assets/map-east.jpg";
+import mapWest from "@/assets/map-west.jpg";
+import mapMid from "@/assets/map-mid.jpg";
 import { Logo, BQMonogram } from "@/components/quiz/Logo";
 import { ProgressBar } from "@/components/quiz/ProgressBar";
 import { NextButton } from "@/components/quiz/NextButton";
@@ -13,13 +18,12 @@ import { trackLead, trackPageView, trackSchedule, trackStep } from "@/lib/pixel"
 import { getUTM } from "@/lib/utm";
 import heroImg from "@/assets/hero-technician.jpg";
 
-const TOTAL = 9;
+const TOTAL = 7;
+const QUESTION_STEPS = [3, 4, 5, 6]; // steps that count as "questions" in progress bar
 
 interface QuizState {
-  appliances: string[];
   areas: string[];
   team_size: string;
-  lead_source: string;
   slot: { date: string; time: string; iso: string } | null;
   first_name: string;
   phone: string;
@@ -28,10 +32,8 @@ interface QuizState {
 }
 
 const initial: QuizState = {
-  appliances: [],
   areas: [],
   team_size: "",
-  lead_source: "",
   slot: null,
   first_name: "",
   phone: "+1 ",
@@ -39,19 +41,14 @@ const initial: QuizState = {
   agreed: false,
 };
 
-const APPLIANCES = [
-  { id: "Refrigerator", icon: Refrigerator },
-  { id: "Washer/Dryer", icon: WashingMachine },
-  { id: "Dishwasher", icon: Wrench },
-  { id: "Oven/Range/Stove", icon: Flame },
-  { id: "Microwave", icon: Microwave },
-  { id: "HVAC", icon: Wind },
-  { id: "Other", icon: ChefHat },
+const AREAS: { id: string; img: string }[] = [
+  { id: "North Atlanta", img: mapNorth },
+  { id: "South Atlanta", img: mapSouth },
+  { id: "East Atlanta", img: mapEast },
+  { id: "West Atlanta", img: mapWest },
+  { id: "Mid / Downtown", img: mapMid },
 ];
-
-const AREAS = ["North Atlanta", "South Atlanta", "East Atlanta", "West Atlanta", "Mid / Downtown"];
 const TEAMS = ["Just me (solo)", "2–5 people", "6–10 people", "10+"];
-const SOURCES = ["Thumbtack / Yelp / Angi", "Google Ads", "Word of mouth / referrals", "Other"];
 
 const SERVICES = [
   { label: "Electrical", icon: "⚡" },
@@ -79,10 +76,10 @@ export const Quiz = () => {
   const next = () => { setDirection("fwd"); setStep((s) => Math.min(s + 1, TOTAL)); };
   const back = () => { setDirection("back"); setStep((s) => Math.max(s - 1, 1)); };
 
-  const toggle = (key: "appliances" | "areas", v: string) =>
+  const toggleArea = (v: string) =>
     setState((s) => ({
       ...s,
-      [key]: s[key].includes(v) ? s[key].filter((x) => x !== v) : [...s[key], v],
+      areas: s.areas.includes(v) ? s.areas.filter((x) => x !== v) : [...s.areas, v],
     }));
 
   const submit = async () => {
@@ -97,10 +94,8 @@ export const Quiz = () => {
         first_name: state.first_name.trim(),
         phone: state.phone.trim(),
         email: state.email.trim(),
-        appliances: state.appliances,
         areas: state.areas,
         team_size: state.team_size,
-        lead_source: state.lead_source,
         booked_date: state.slot?.date ?? null,
         booked_time: state.slot?.time ?? null,
         ...utm,
@@ -116,7 +111,7 @@ export const Quiz = () => {
               firstName: state.first_name,
               email: state.email,
               phone: state.phone,
-              notes: `Appliances: ${state.appliances.join(", ")}\nAreas: ${state.areas.join(", ")}\nTeam: ${state.team_size}\nSource: ${state.lead_source}`,
+              notes: `Areas: ${state.areas.join(", ")}\nTeam: ${state.team_size}`,
             },
           });
           trackSchedule();
@@ -134,6 +129,9 @@ export const Quiz = () => {
   };
 
   const showBack = step > 1 && step < TOTAL;
+  // Progress numbering: exclude intro (1) and final (7); show as 1..5
+  const progressTotal = TOTAL - 2;
+  const progressStep = step - 1;
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -150,7 +148,7 @@ export const Quiz = () => {
                 <ArrowLeft className="h-5 w-5 text-muted-foreground" />
               </button>
             ) : <div className="w-9" />}
-            <div className="flex-1"><ProgressBar step={step} total={TOTAL} /></div>
+            <div className="flex-1"><ProgressBar step={progressStep} total={progressTotal} /></div>
           </header>
         )}
 
@@ -158,24 +156,13 @@ export const Quiz = () => {
           {step === 1 && <Step1 onNext={next} />}
           {step === 2 && <Step2 onNext={next} />}
           {step === 3 && (
-            <StepMulti
-              h1="What appliances do you repair?"
-              sub="Select all that apply"
-              options={APPLIANCES.map((a) => ({ id: a.id, label: a.id, Icon: a.icon }))}
-              selected={state.appliances}
-              onToggle={(v) => toggle("appliances", v)}
+            <StepAreas
+              selected={state.areas}
+              onToggle={toggleArea}
               onNext={next}
-              canNext={state.appliances.length > 0}
             />
           )}
           {step === 4 && (
-            <StepAreas
-              selected={state.areas}
-              onToggle={(v) => toggle("areas", v)}
-              onNext={next}
-            />
-          )}
-          {step === 5 && (
             <StepSingle
               h1="How many technicians work in your company?"
               options={TEAMS}
@@ -184,24 +171,14 @@ export const Quiz = () => {
               onNext={next}
             />
           )}
-          {step === 6 && (
-            <StepSingle
-              h1="How do you currently get new clients?"
-              icon={<Search className="h-5 w-5 text-primary" />}
-              options={SOURCES}
-              selected={state.lead_source}
-              onSelect={(v) => setState((s) => ({ ...s, lead_source: v }))}
-              onNext={next}
-            />
-          )}
-          {step === 7 && (
+          {step === 5 && (
             <Step7Booking
               selected={state.slot}
               onSelect={(slot) => setState((s) => ({ ...s, slot }))}
               onNext={next}
             />
           )}
-          {step === 8 && (
+          {step === 6 && (
             <Step8Form
               state={state}
               setState={setState}
@@ -209,7 +186,7 @@ export const Quiz = () => {
               onSubmit={submit}
             />
           )}
-          {step === 9 && <Step9 />}
+          {step === 7 && <Step9 />}
         </main>
       </div>
     </div>
@@ -330,18 +307,25 @@ const StepAreas = ({ selected, onToggle, onNext }: {
     </div>
     <div className="grid grid-cols-2 gap-3">
       {AREAS.map((a, i) => {
-        const isSel = selected.includes(a);
+        const isSel = selected.includes(a.id);
         const isLast = i === AREAS.length - 1 && AREAS.length % 2 === 1;
         return (
           <button
-            key={a}
-            onClick={() => onToggle(a)}
+            key={a.id}
+            onClick={() => onToggle(a.id)}
             className={`quiz-card flex flex-col gap-2 items-start ${isSel ? "selected" : ""} ${isLast ? "col-span-2" : ""}`}
           >
-            <div className="w-full aspect-[16/9] rounded-lg bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
-              <MapPin className={`h-8 w-8 ${isSel ? "text-primary" : "text-primary/50"}`} />
+            <div className="w-full aspect-[16/10] rounded-lg overflow-hidden bg-secondary">
+              <img
+                src={a.img}
+                alt={`${a.id} service area map`}
+                width={512}
+                height={512}
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <span className="text-sm font-medium">{a}</span>
+            <span className="text-sm font-medium">{a.id}</span>
           </button>
         );
       })}
