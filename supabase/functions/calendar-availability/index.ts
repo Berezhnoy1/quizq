@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
 
   try {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    const GCAL_KEY = Deno.env.get("GOOGLE_CALENDAR_API_KEY");
+    const GCAL_KEY = Deno.env.get("GOOGLE_CALENDAR_API_KEY_1");
     if (!LOVABLE_API_KEY || !GCAL_KEY) throw new Error("Missing API keys");
 
     const url = new URL(req.url);
