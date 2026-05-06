@@ -1,7 +1,7 @@
+import logoSvg from "@/assets/branviq-logo.svg";
+
 export const Logo = ({ className = "" }: { className?: string }) => (
-  <span className={`font-display font-bold text-primary text-xl tracking-tight ${className}`}>
-    BRANVIQ
-  </span>
+  <img src={logoSvg} alt="BRANVIQ" className={`h-7 w-auto ${className}`} />
 );
 
 export const BQMonogram = ({ size = 56 }: { size?: number }) => (
