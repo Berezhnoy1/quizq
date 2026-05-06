@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
     if (!LOVABLE_API_KEY || !GCAL_KEY) throw new Error("Missing API keys");
 
     const url = new URL(req.url);
-    const calendarId = url.searchParams.get("calendarId") || "alexbouch15@gmail.com";
+    const calendarId = url.searchParams.get("calendarId") || "primary";
 
     // Compute window: now -> +7 days (in UTC)
     const now = new Date();
