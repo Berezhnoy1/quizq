@@ -27,29 +27,28 @@ Deno.serve(async (req) => {
 
     const event = {
       summary: `Branviq Vendor Call — ${firstName}`,
-      description: [
-        `📞 BRANVIQ — Vendor Onboarding Call`,
-        ``,
-        `Hi ${firstName}! Thank you for your interest in joining Branviq.`,
-        ``,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `📋 YOUR APPLICATION`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `• Phone: ${phone}`,
-        `• Email: ${email}`,
-        notes ? `• ${notes}` : "",
-        ``,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `📌 WHAT TO EXPECT ON THE CALL`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `1. We'll explain how Branviq works`,
-        `2. Help you set up your account (~2 hrs)`,
-        `3. First leads in your area within 24–48 hours`,
-        ``,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `📞 Can't wait? Call us: (866) 344-8881`,
+      description:
+        `📞 BRANVIQ — Vendor Onboarding Call\n` +
+        `\n` +
+        `Hi ${firstName}! Thank you for your interest in joining Branviq.\n` +
+        `\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `📋 YOUR APPLICATION\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `• Phone: ${phone}\n` +
+        `• Email: ${email}\n` +
+        (notes ? `• ${notes}\n` : ``) +
+        `\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `📌 WHAT TO EXPECT ON THE CALL\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `1. We'll explain how Branviq works\n` +
+        `2. Help you set up your account (~2 hrs)\n` +
+        `3. First leads in your area within 24–48 hours\n` +
+        `\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `📞 Can't wait? Call us: (866) 344-8881\n` +
         `🌐 branviq.com`,
-      ].filter(Boolean).join("\n"),
       start: { dateTime: start.toISOString(), timeZone: "America/New_York" },
       end: { dateTime: end.toISOString(), timeZone: "America/New_York" },
       attendees: [{ email }],

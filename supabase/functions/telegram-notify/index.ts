@@ -4,17 +4,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/telegram";
-
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    const TELEGRAM_API_KEY = Deno.env.get("TELEGRAM_API_KEY");
+    const BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
     const CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
-    if (!TELEGRAM_API_KEY) throw new Error("TELEGRAM_API_KEY not configured");
+    if (!BOT_TOKEN) throw new Error("TELEGRAM_BOT_TOKEN not configured");
     if (!CHAT_ID) throw new Error("TELEGRAM_CHAT_ID not configured");
 
     const body = await req.json();
@@ -34,17 +30,16 @@ Deno.serve(async (req) => {
       `👥 Team: ${team_size ?? ""}\n\n` +
       `📅 Call: ${callStr}`;
 
-    const res = await fetch(`${GATEWAY_URL}/sendMessage`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-        "X-Connection-Api-Key": TELEGRAM_API_KEY,
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" }),
       },
-      body: JSON.stringify({ chat_id: CHAT_ID, text }),
-    });
+    );
     const data = await res.json();
-    if (!res.ok) throw new Error(`telegram failed [${res.status}]: ${JSON.stringify(data)}`);
+    if (!data.ok) throw new Error(`telegram failed: ${JSON.stringify(data)}`);
 
     return new Response(JSON.stringify({ ok: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
