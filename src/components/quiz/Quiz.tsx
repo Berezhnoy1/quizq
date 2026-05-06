@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { trackLead, trackPageView, trackSchedule, trackStep } from "@/lib/pixel";
 import { getUTM } from "@/lib/utm";
 import heroImg from "@/assets/hero-technician.jpg";
+import bqServices from "@/assets/bq-services.jpg";
 
 const TOTAL = 7;
 const QUESTION_STEPS = [3, 4, 5, 6]; // steps that count as "questions" in progress bar
@@ -477,15 +478,12 @@ const Step9 = () => (
       </p>
     </div>
 
-    <div className="flex justify-center"><BQMonogram size={64} /></div>
-
-    <div className="grid grid-cols-3 gap-3">
-      {SERVICES.map((s) => (
-        <div key={s.label} className="bg-card rounded-xl p-3 shadow-soft">
-          <div className="text-2xl">{s.icon}</div>
-          <div className="text-xs font-medium mt-1 text-muted-foreground">{s.label}</div>
-        </div>
-      ))}
+    <div className="flex justify-center">
+      <img
+        src={bqServices}
+        alt="BQ services: electrical, HVAC, appliance, cleaning, moving, plumbing"
+        className="w-full max-w-[320px] h-auto"
+      />
     </div>
 
     <div className="bg-card rounded-2xl p-5 shadow-soft text-left space-y-3">
@@ -506,7 +504,9 @@ const Step9 = () => (
     </div>
 
     <div className="space-y-3 pt-2">
-      <p className="text-sm text-muted-foreground">Want to get started right away? Give us a call</p>
+      <p className="text-sm text-foreground bg-primary/5 rounded-xl py-3 px-4">
+        Want to get started right away? Give us a call
+      </p>
       <a href="tel:+18663448881" className="block">
         <Button className="w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-card">
           <Phone className="h-5 w-5 mr-2" />
