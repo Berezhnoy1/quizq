@@ -1,4 +1,5 @@
-// Creates a Google Calendar event via Service Account (direct API)
+// Creates a Google Calendar event via Service Account + Domain-Wide Delegation
+// Impersonates admin@branviq.com to send calendar invites to leads
 import { crypto } from "https://deno.land/std@0.208.0/crypto/mod.ts";
 import { encode as b64encode } from "https://deno.land/std@0.208.0/encoding/base64url.ts";
 
@@ -9,16 +10,17 @@ const corsHeaders = {
 
 /* ── Google Service Account JWT auth ── */
 
-async function getAccessToken(sa: { client_email: string; private_key: string }): Promise<string> {
+async function getAccessToken(sa: { client_email: string; private_key: string }, impersonate?: string): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: "RS256", typ: "JWT" };
-  const claim = {
+  const claim: Record<string, unknown> = {
     iss: sa.client_email,
     scope: "https://www.googleapis.com/auth/calendar",
     aud: "https://oauth2.googleapis.com/token",
     iat: now,
     exp: now + 3600,
   };
+  if (impersonate) claim.sub = impersonate;
 
   const enc = new TextEncoder();
   const toB64 = (obj: unknown) => b64encode(enc.encode(JSON.stringify(obj)));
@@ -56,10 +58,12 @@ Deno.serve(async (req) => {
     if (!saJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON not configured");
 
     const sa = JSON.parse(saJson);
-    const token = await getAccessToken(sa);
+    // Impersonate Branviq Workspace user for Domain-Wide Delegation
+    const IMPERSONATE_EMAIL = "admin@branviq.com";
+    const token = await getAccessToken(sa, IMPERSONATE_EMAIL);
 
     const body = await req.json();
-    const { startIso, firstName, email, phone, calendarId = "alexbouch15@gmail.com", notes } = body;
+    const { startIso, firstName, email, phone, calendarId = "admin@branviq.com", notes } = body;
     if (!startIso || !firstName || !email) {
       return new Response(JSON.stringify({ error: "missing fields" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -96,12 +100,13 @@ Deno.serve(async (req) => {
         `📧 Vendor contact: ${email}`,
       start: { dateTime: start.toISOString(), timeZone: "America/New_York" },
       end: { dateTime: end.toISOString(), timeZone: "America/New_York" },
-      // Note: service accounts on personal Gmail cannot add attendees
-      // Lead notifications handled via Resend email instead
+      attendees: [
+        { email: email, displayName: firstName },
+      ],
     };
 
     const res = await fetch(
-      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`,
+      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?sendUpdates=all`,
       {
         method: "POST",
         headers: {
