@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Phone, Star, CheckCircle2, MapPin } from "lucide-react";
+import { ArrowLeft, ArrowRight, Phone, Star, CheckCircle2, MapPin, Clock, Users, Zap, Shield, Target, ThumbsUp } from "lucide-react";
 import mapNorth from "@/assets/map-north.jpg";
 import mapSouth from "@/assets/map-south.jpg";
 import mapEast from "@/assets/map-east.jpg";
@@ -122,6 +122,17 @@ export const Quiz = () => {
       supabase.functions.invoke("telegram-notify", { body: submissionPayload })
         .catch((err) => console.warn("telegram-notify failed", err));
 
+      // Confirmation email to lead (best-effort)
+      supabase.functions.invoke("send-confirmation-email", {
+        body: {
+          firstName: state.first_name,
+          email: state.email,
+          phone: state.phone,
+          bookedDate: state.slot?.date ?? null,
+          bookedTime: state.slot?.time ?? null,
+        },
+      }).catch((err) => console.warn("send-confirmation-email failed", err));
+
       // Create calendar event (best-effort)
       if (state.slot) {
         try {
@@ -231,15 +242,30 @@ const Step1 = ({ onNext }: { onNext: () => void }) => (
         />
       </div>
     </div>
-    <div className="px-5 mt-6 flex-1">
+    <div className="px-5 mt-5 flex-1">
       <h1 className="text-3xl font-display font-bold leading-tight text-foreground">
         Get leads for appliance repair in Atlanta
       </h1>
-      <p className="mt-3 text-base text-muted-foreground leading-relaxed">
+      <p className="mt-2 text-base text-muted-foreground leading-relaxed">
         Pay only for real job requests — not for clicks or impressions.
       </p>
+      {/* Trust signals */}
+      <div className="mt-4 flex flex-col gap-2.5">
+        <div className="trust-badge">
+          <span className="icon"><Clock className="h-4 w-4" /></span>
+          <span>First lead within 48 hours</span>
+        </div>
+        <div className="trust-badge">
+          <span className="icon"><Users className="h-4 w-4" /></span>
+          <span>100+ Atlanta techs already joined</span>
+        </div>
+        <div className="trust-badge">
+          <span className="icon"><MapPin className="h-4 w-4" /></span>
+          <span>Pay only for leads in your area</span>
+        </div>
+      </div>
     </div>
-    <div className="px-5 mt-8 pb-6">
+    <div className="px-5 mt-6 pb-6">
       <NextButton onClick={onNext} label="Get Started" />
       <p className="text-xs text-muted-foreground text-center mt-4">
         <a href="#" className="underline">Terms of use</a> and <a href="#" className="underline">Privacy policy</a>
@@ -250,32 +276,40 @@ const Step1 = ({ onNext }: { onNext: () => void }) => (
 
 const Step2 = ({ onNext }: { onNext: () => void }) => (
   <div className="space-y-5">
-    <h1 className="text-2xl font-display font-bold">Partnership Overview</h1>
+    <h1 className="text-2xl font-display font-bold">How it works</h1>
+    <p className="text-sm text-muted-foreground">Three simple steps to start getting local repair jobs</p>
 
-    <Section title="🎯 Our Goal">
-      To provide independent Atlanta techs with a steady stream of local jobs.
-      No more wasting time on DIY marketing — we find real clients, and you do
-      what you do best.
-    </Section>
+    <div className="space-y-3">
+      <div className="quiz-card flex items-start gap-4">
+        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+          <Target className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-display font-semibold text-[15px]">We find the clients</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">Real job requests from homeowners in your area — no cold calls, no ads to run</p>
+        </div>
+      </div>
 
-    <Section title="🛠️ Your Responsibilities">
-      <ul className="space-y-2 text-sm text-muted-foreground">
-        <li>• A <b className="text-foreground">$100 service credit</b> is required to start. It covers your first leads — you pay only for real requests.</li>
-        <li>• Drive to clients in the Atlanta area</li>
-        <li>• Handle repairs (quality is 100% on you)</li>
-        <li>• Communicate with clients & get paid on-site</li>
-      </ul>
-    </Section>
+      <div className="quiz-card flex items-start gap-4">
+        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+          <Shield className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-display font-semibold text-[15px]">Pay only for real leads</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">No subscriptions, no commissions. $100 credit to start — covers your first leads</p>
+        </div>
+      </div>
 
-    <Section title="✨ What We Offer">
-      <ul className="space-y-3 text-sm text-muted-foreground">
-        <li><b className="text-foreground">Pay-per-lead only</b> — zero monthly subscriptions, commissions, or hidden fees</li>
-        <li><b className="text-foreground">Work in your ZIP codes</b> — you set your own exact service area</li>
-        <li><b className="text-foreground">Total control</b> — choose which jobs to accept or decline right from your phone</li>
-        <li><b className="text-foreground">Fair competition</b> — we never share a single lead with 5+ techs at the same time</li>
-        <li><b className="text-foreground">Fast start</b> — onboarding takes ~2 hours, first lead within 24–48 hours</li>
-      </ul>
-    </Section>
+      <div className="quiz-card flex items-start gap-4">
+        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+          <Zap className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-display font-semibold text-[15px]">Fast onboarding</h3>
+          <p className="text-sm text-muted-foreground mt-0.5">Set up takes ~2 hours. First leads within 24–48 hours. You choose which jobs to accept</p>
+        </div>
+      </div>
+    </div>
 
     <NextButton onClick={onNext} />
   </div>
@@ -485,7 +519,7 @@ const Field = ({ label, children }: { label: string; children: React.ReactNode }
 const Step9 = () => (
   <div className="text-center space-y-6 pt-4">
     <div className="flex justify-center">
-      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center animate-check-bounce">
         <CheckCircle2 className="h-10 w-10 text-primary" />
       </div>
     </div>

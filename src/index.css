@@ -60,13 +60,67 @@
 
 @layer components {
   .quiz-card {
-    @apply bg-card rounded-2xl p-5 cursor-pointer transition-all border-2 border-transparent;
+    @apply bg-card rounded-2xl p-5 cursor-pointer border-2 border-transparent relative;
     box-shadow: var(--shadow-soft);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .quiz-card:hover {
-    @apply border-primary/40;
+    @apply border-primary/30;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px -4px hsl(230 60% 30% / 0.12);
+  }
+  .quiz-card:active {
+    transform: scale(0.97);
   }
   .quiz-card.selected {
     @apply border-primary bg-accent;
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px -4px hsl(230 100% 58% / 0.18);
+  }
+
+  .btn-gradient {
+    background: linear-gradient(135deg, hsl(230 100% 58%), hsl(230 100% 65%));
+    transition: all 0.2s ease;
+  }
+  .btn-gradient:hover {
+    background: linear-gradient(135deg, hsl(230 100% 54%), hsl(230 100% 60%));
+    box-shadow: 0 6px 24px -6px hsl(230 100% 50% / 0.35);
+    transform: translateY(-1px);
+  }
+  .btn-gradient:active {
+    transform: translateY(0);
+  }
+
+  /* Checkmark animation for selected cards */
+  .quiz-card.selected::after {
+    content: "\2713";
+    @apply absolute top-3 right-3 h-6 w-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center;
+    animation: pop-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes pop-in {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes check-bounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .animate-check-bounce {
+    animation: check-bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Trust badge styling */
+  .trust-badge {
+    @apply flex items-center gap-2 text-sm font-medium;
+    color: hsl(var(--foreground));
+  }
+  .trust-badge .icon {
+    @apply flex items-center justify-center h-8 w-8 rounded-full shrink-0;
+    background: hsl(230 100% 58% / 0.08);
+    color: hsl(var(--primary));
   }
 }
