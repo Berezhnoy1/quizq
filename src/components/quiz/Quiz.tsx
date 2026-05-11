@@ -122,16 +122,15 @@ export const Quiz = () => {
       supabase.functions.invoke("telegram-notify", { body: submissionPayload })
         .catch((err) => console.warn("telegram-notify failed", err));
 
-      // Confirmation email to lead (best-effort)
-      supabase.functions.invoke("send-confirmation-email", {
+      // Confirmation email via Gmail API (Domain-Wide Delegation, admin@branviq.com)
+      supabase.functions.invoke("send-gmail", {
         body: {
           firstName: state.first_name,
           email: state.email,
-          phone: state.phone,
           bookedDate: state.slot?.date ?? null,
           bookedTime: state.slot?.time ?? null,
         },
-      }).catch((err) => console.warn("send-confirmation-email failed", err));
+      }).catch((err) => console.warn("send-gmail failed", err));
 
       // Create calendar event (best-effort)
       if (state.slot) {
