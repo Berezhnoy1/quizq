@@ -431,26 +431,20 @@ const StepAreas = ({ selected, onToggle, onNext }: {
       <h1 className="text-xl font-display font-bold">What area of Atlanta do you work in?</h1>
       <p className="text-sm text-muted-foreground mt-0.5">Select all areas that apply</p>
     </div>
-    <div className="grid grid-cols-3 gap-2">
+    <div className="flex flex-wrap justify-center gap-2.5">
       {AREAS.map((a) => {
         const isSel = selected.includes(a.id);
         return (
           <button
             key={a.id}
             onClick={() => onToggle(a.id)}
-            className={`quiz-card flex flex-col gap-1 items-start p-2 ${isSel ? "selected" : ""}`}
+            className={`quiz-card flex flex-col gap-1 items-start p-2.5 ${isSel ? "selected" : ""}`}
+            style={{ width: "calc(33.333% - 7px)" }}
           >
-            <div className="w-full aspect-square rounded-md overflow-hidden bg-secondary">
-              <img
-                src={a.img}
-                alt={`${a.id} service area map`}
-                width={256}
-                height={256}
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
+            <div className="w-full aspect-square rounded-lg overflow-hidden bg-secondary">
+              <img src={a.img} alt={`${a.id} service area map`} width={256} height={256} loading="lazy" className="w-full h-full object-cover" />
             </div>
-            <span className="text-xs font-medium leading-tight">{a.id}</span>
+            <span className="text-xs font-medium leading-tight text-center w-full">{a.id}</span>
           </button>
         );
       })}
