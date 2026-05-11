@@ -216,14 +216,19 @@ function buildRawMessage(to: string, subject: string, html: string): string {
     ``,
     `--${boundary}`,
     `Content-Type: text/html; charset=UTF-8`,
-    `Content-Transfer-Encoding: quoted-printable`,
+    `Content-Transfer-Encoding: 7bit`,
     ``,
     html,
     ``,
     `--${boundary}--`,
   ].join("\r\n");
 
-  return b64encode(new TextEncoder().encode(mime));
+  // Gmail API requires URL-safe base64 without padding
+  const raw = btoa(unescape(encodeURIComponent(mime)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+  return raw;
 }
 
 /* ── main handler ── */
