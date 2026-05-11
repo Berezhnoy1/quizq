@@ -426,31 +426,31 @@ const StepMulti = ({ h1, sub, options, selected, onToggle, onNext, canNext }: {
 const StepAreas = ({ selected, onToggle, onNext }: {
   selected: string[]; onToggle: (v: string) => void; onNext: () => void;
 }) => (
-  <div className="space-y-5">
+  <div className="space-y-3">
     <div>
-      <h1 className="text-2xl font-display font-bold">What area of Atlanta do you work in?</h1>
-      <p className="text-sm text-muted-foreground mt-1">Select all areas that apply</p>
+      <h1 className="text-xl font-display font-bold">What area of Atlanta do you work in?</h1>
+      <p className="text-sm text-muted-foreground mt-0.5">Select all areas that apply</p>
     </div>
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-3 gap-2">
       {AREAS.map((a) => {
         const isSel = selected.includes(a.id);
         return (
           <button
             key={a.id}
             onClick={() => onToggle(a.id)}
-            className={`quiz-card flex flex-col gap-1.5 items-start ${isSel ? "selected" : ""}`}
+            className={`quiz-card flex flex-col gap-1 items-start p-2 ${isSel ? "selected" : ""}`}
           >
-            <div className="w-full aspect-[4/3] rounded-lg overflow-hidden bg-secondary">
+            <div className="w-full aspect-square rounded-md overflow-hidden bg-secondary">
               <img
                 src={a.img}
                 alt={`${a.id} service area map`}
-                width={512}
-                height={384}
+                width={256}
+                height={256}
                 loading="lazy"
                 className="w-full h-full object-cover"
               />
             </div>
-            <span className="text-sm font-medium">{a.id}</span>
+            <span className="text-xs font-medium leading-tight">{a.id}</span>
           </button>
         );
       })}
