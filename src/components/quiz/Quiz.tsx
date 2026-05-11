@@ -300,29 +300,29 @@ export const Quiz = () => {
 
 const Step1 = ({ onNext }: { onNext: () => void }) => (
   <div className="-mx-5 -mb-6 flex flex-col">
-    <div className="flex items-center justify-between px-5 pt-5">
+    <div className="flex items-center justify-between px-5 pt-4">
       <Logo />
     </div>
-    <div className="px-5 mt-6">
-      <div className="rounded-2xl overflow-hidden shadow-card aspect-[4/3] bg-secondary">
+    <div className="px-5 mt-3">
+      <div className="rounded-2xl overflow-hidden shadow-card aspect-[16/9] bg-secondary">
         <img
           src={heroImg}
           alt="Appliance repair technician at work in Atlanta"
           width={1024}
-          height={1024}
+          height={576}
           className="w-full h-full object-cover object-top"
         />
       </div>
     </div>
-    <div className="px-5 mt-5 flex-1">
-      <h1 className="text-3xl font-display font-bold leading-tight text-foreground">
+    <div className="px-5 mt-4 flex-1">
+      <h1 className="text-2xl font-display font-bold leading-tight text-foreground">
         Get leads for appliance repair in Atlanta
       </h1>
-      <p className="mt-2 text-base text-muted-foreground leading-relaxed">
+      <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
         Pay only for real job requests — not for clicks or impressions.
       </p>
       {/* Trust signals */}
-      <div className="mt-4 flex flex-col gap-2.5">
+      <div className="mt-3 flex flex-col gap-2">
         <div className="trust-badge">
           <span className="icon"><Clock className="h-4 w-4" /></span>
           <span>First lead within 48 hours</span>
@@ -337,9 +337,9 @@ const Step1 = ({ onNext }: { onNext: () => void }) => (
         </div>
       </div>
     </div>
-    <div className="px-5 mt-6 pb-6">
+    <div className="px-5 mt-4 pb-5">
       <NextButton onClick={onNext} label="Get Started" />
-      <p className="text-xs text-muted-foreground text-center mt-4">
+      <p className="text-xs text-muted-foreground text-center mt-3">
         <a href="#" className="underline">Terms of use</a> and <a href="#" className="underline">Privacy policy</a>
       </p>
     </div>
@@ -432,21 +432,20 @@ const StepAreas = ({ selected, onToggle, onNext }: {
       <p className="text-sm text-muted-foreground mt-1">Select all areas that apply</p>
     </div>
     <div className="grid grid-cols-2 gap-3">
-      {AREAS.map((a, i) => {
+      {AREAS.map((a) => {
         const isSel = selected.includes(a.id);
-        const isLast = i === AREAS.length - 1 && AREAS.length % 2 === 1;
         return (
           <button
             key={a.id}
             onClick={() => onToggle(a.id)}
-            className={`quiz-card flex flex-col gap-2 items-start ${isSel ? "selected" : ""} ${isLast ? "col-span-2" : ""}`}
+            className={`quiz-card flex flex-col gap-1.5 items-start ${isSel ? "selected" : ""}`}
           >
-            <div className="w-full aspect-[16/10] rounded-lg overflow-hidden bg-secondary">
+            <div className="w-full aspect-[4/3] rounded-lg overflow-hidden bg-secondary">
               <img
                 src={a.img}
                 alt={`${a.id} service area map`}
                 width={512}
-                height={512}
+                height={384}
                 loading="lazy"
                 className="w-full h-full object-cover"
               />

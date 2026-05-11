@@ -86,55 +86,57 @@ function buildHtml(firstName: string, bookedDate: string, bookedTime: string): s
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Your Branviq call is confirmed</title>
 </head>
-<body style="margin:0;padding:0;background:#f4f6fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6fb;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#f0f2f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f2f5;padding:40px 16px;">
     <tr>
       <td align="center">
-        <table width="100%" style="max-width:560px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.10);">
+        <table width="100%" style="max-width:540px;border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
 
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);padding:36px 32px;text-align:center;">
-              <p style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">Branviq</p>
+            <td style="background:#1e3a8a;padding:32px 32px 28px;text-align:center;">
+              <p style="margin:0 0 6px;font-size:32px;font-weight:800;color:#ffffff;letter-spacing:0.3px;">Branviq</p>
+              <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.7);letter-spacing:0.5px;">Appliance Repair Leads</p>
             </td>
           </tr>
 
           <!-- Body -->
           <tr>
-            <td style="background:#ffffff;padding:36px 32px;">
+            <td style="background:#ffffff;padding:36px 32px 32px;">
 
-              <h1 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#111827;">
-                Your call is confirmed! ✅
+              <p style="margin:0 0 6px;font-size:14px;color:#6b7280;">Hi ${firstName},</p>
+              <h1 style="margin:0 0 20px;font-size:24px;font-weight:700;color:#111827;line-height:1.3;">
+                Your call is confirmed!
               </h1>
-
-              <p style="margin:0 0 28px;font-size:15px;color:#374151;line-height:1.6;">
-                Hi ${firstName},<br/>
-                Thank you for your interest in joining Branviq. We're looking forward to speaking with you!
-              </p>
 
               <!-- Call details card -->
               <table width="100%" cellpadding="0" cellspacing="0"
-                style="background:#f0f4ff;border-radius:12px;padding:20px 24px;margin-bottom:28px;">
+                style="border:1px solid #e5e7eb;border-radius:12px;margin-bottom:28px;">
                 <tr>
-                  <td>
-                    <p style="margin:0 0 16px;font-size:11px;font-weight:700;color:#2563eb;letter-spacing:1.5px;text-transform:uppercase;">
-                      Call Details
-                    </p>
-                    <table cellpadding="0" cellspacing="0">
+                  <td style="padding:20px 24px;border-bottom:1px solid #f3f4f6;">
+                    <table cellpadding="0" cellspacing="0" width="100%">
                       <tr>
-                        <td style="padding-bottom:12px;">
-                          <span style="font-size:18px;vertical-align:middle;">📅</span>
-                          <span style="font-size:15px;font-weight:600;color:#111827;vertical-align:middle;margin-left:8px;">
-                            ${dateStr} at ${timeStr} ET
-                          </span>
+                        <td style="width:40px;vertical-align:top;">
+                          <div style="width:36px;height:36px;background:#eff6ff;border-radius:8px;text-align:center;line-height:36px;font-size:18px;">&#128197;</div>
+                        </td>
+                        <td style="vertical-align:top;padding-left:12px;">
+                          <p style="margin:0 0 2px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Date &amp; Time</p>
+                          <p style="margin:0;font-size:16px;font-weight:600;color:#111827;">${dateStr} at ${timeStr} ET</p>
                         </td>
                       </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:20px 24px;">
+                    <table cellpadding="0" cellspacing="0" width="100%">
                       <tr>
-                        <td>
-                          <span style="font-size:18px;vertical-align:middle;">📞</span>
-                          <span style="font-size:15px;color:#374151;vertical-align:middle;margin-left:8px;">
-                            We'll call you at <strong>${PHONE}</strong>
-                          </span>
+                        <td style="width:40px;vertical-align:top;">
+                          <div style="width:36px;height:36px;background:#eff6ff;border-radius:8px;text-align:center;line-height:36px;font-size:18px;">&#128222;</div>
+                        </td>
+                        <td style="vertical-align:top;padding-left:12px;">
+                          <p style="margin:0 0 2px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Phone</p>
+                          <p style="margin:0;font-size:16px;font-weight:600;color:#111827;">We'll call you at ${PHONE}</p>
                         </td>
                       </tr>
                     </table>
@@ -143,27 +145,36 @@ function buildHtml(firstName: string, bookedDate: string, bookedTime: string): s
               </table>
 
               <!-- What to expect -->
-              <p style="margin:0 0 14px;font-size:15px;font-weight:700;color:#111827;">What to expect on the call:</p>
-              <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+              <p style="margin:0 0 16px;font-size:15px;font-weight:700;color:#111827;">What to expect:</p>
+              <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;" width="100%">
                 <tr>
-                  <td style="padding-bottom:10px;vertical-align:top;">
-                    <span style="display:inline-block;width:24px;height:24px;background:#2563eb;border-radius:50%;
-                      font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:24px;margin-right:10px;">1</span>
-                    <span style="font-size:14px;color:#374151;line-height:24px;">We'll explain how Branviq works</span>
+                  <td style="padding-bottom:14px;">
+                    <table cellpadding="0" cellspacing="0"><tr>
+                      <td style="width:28px;vertical-align:top;">
+                        <div style="width:24px;height:24px;background:#1e3a8a;border-radius:50%;font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:24px;">1</div>
+                      </td>
+                      <td style="padding-left:10px;font-size:14px;color:#374151;line-height:24px;">We'll explain how Branviq works</td>
+                    </tr></table>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding-bottom:10px;vertical-align:top;">
-                    <span style="display:inline-block;width:24px;height:24px;background:#2563eb;border-radius:50%;
-                      font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:24px;margin-right:10px;">2</span>
-                    <span style="font-size:14px;color:#374151;line-height:24px;">Help you set up your account (~2 hours)</span>
+                  <td style="padding-bottom:14px;">
+                    <table cellpadding="0" cellspacing="0"><tr>
+                      <td style="width:28px;vertical-align:top;">
+                        <div style="width:24px;height:24px;background:#1e3a8a;border-radius:50%;font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:24px;">2</div>
+                      </td>
+                      <td style="padding-left:10px;font-size:14px;color:#374151;line-height:24px;">Help you set up your account (~2 hrs)</td>
+                    </tr></table>
                   </td>
                 </tr>
                 <tr>
-                  <td style="vertical-align:top;">
-                    <span style="display:inline-block;width:24px;height:24px;background:#2563eb;border-radius:50%;
-                      font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:24px;margin-right:10px;">3</span>
-                    <span style="font-size:14px;color:#374151;line-height:24px;">First leads in your area within 24–48 hours</span>
+                  <td>
+                    <table cellpadding="0" cellspacing="0"><tr>
+                      <td style="width:28px;vertical-align:top;">
+                        <div style="width:24px;height:24px;background:#1e3a8a;border-radius:50%;font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:24px;">3</div>
+                      </td>
+                      <td style="padding-left:10px;font-size:14px;color:#374151;line-height:24px;">First leads in your area within 24-48 hrs</td>
+                    </tr></table>
                   </td>
                 </tr>
               </table>
@@ -172,11 +183,20 @@ function buildHtml(firstName: string, bookedDate: string, bookedTime: string): s
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <a href="https://app.branviq.com/login"
-                      style="display:inline-block;background:#2563eb;color:#ffffff;font-size:15px;font-weight:600;
-                        text-decoration:none;padding:14px 36px;border-radius:10px;letter-spacing:0.2px;">
-                      Visit Your Dashboard
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://branviq.com" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="20%" fillcolor="#1e3a8a">
+                    <center style="color:#ffffff;font-family:sans-serif;font-size:15px;font-weight:bold;">Visit branviq.com</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <a href="https://branviq.com"
+                      style="display:inline-block;background:#1e3a8a;color:#ffffff;font-size:15px;font-weight:600;
+                        text-decoration:none;padding:14px 48px;border-radius:10px;letter-spacing:0.2px;">
+                      Visit branviq.com
                     </a>
+                    <p style="margin:12px 0 0;font-size:13px;color:#6b7280;line-height:1.5;">
+                      Can't wait? You can create your account now at
+                      <a href="https://app.branviq.com/register" style="color:#1e3a8a;font-weight:600;text-decoration:none;">app.branviq.com</a>
+                    </p>
                   </td>
                 </tr>
               </table>
@@ -186,12 +206,13 @@ function buildHtml(firstName: string, bookedDate: string, bookedTime: string): s
 
           <!-- Footer -->
           <tr>
-            <td style="background:#f9fafb;padding:20px 32px;text-align:center;border-top:1px solid #e5e7eb;">
-              <p style="margin:0;font-size:13px;color:#6b7280;">
-                <a href="https://branviq.com" style="color:#2563eb;text-decoration:none;font-weight:500;">branviq.com</a>
-                &nbsp;|&nbsp;
+            <td style="background:#f9fafb;padding:24px 32px;text-align:center;border-top:1px solid #e5e7eb;">
+              <p style="margin:0 0 4px;font-size:13px;color:#6b7280;">
+                <a href="https://branviq.com" style="color:#1e3a8a;text-decoration:none;font-weight:600;">branviq.com</a>
+                &nbsp;&middot;&nbsp;
                 <a href="tel:+18663448881" style="color:#6b7280;text-decoration:none;">${PHONE}</a>
               </p>
+              <p style="margin:0;font-size:11px;color:#9ca3af;">Branviq - Appliance Repair Lead Generation</p>
             </td>
           </tr>
 
@@ -205,12 +226,18 @@ function buildHtml(firstName: string, bookedDate: string, bookedTime: string): s
 
 /* ── Build RFC 2822 raw message ── */
 
+function encodeSubject(s: string): string {
+  // RFC 2047 encoded-word for UTF-8 safety
+  const encoded = btoa(unescape(encodeURIComponent(s)));
+  return `=?UTF-8?B?${encoded}?=`;
+}
+
 function buildRawMessage(to: string, subject: string, html: string): string {
   const boundary = `boundary_${Date.now()}`;
   const mime = [
     `From: Branviq <${IMPERSONATE}>`,
     `To: ${to}`,
-    `Subject: ${subject}`,
+    `Subject: ${encodeSubject(subject)}`,
     `MIME-Version: 1.0`,
     `Content-Type: multipart/alternative; boundary="${boundary}"`,
     ``,
@@ -252,7 +279,7 @@ Deno.serve(async (req) => {
     });
 
     const token = await getAccessToken(sa);
-    const subject = `Your Branviq call is confirmed — ${formatCallDate(bookedDate, bookedTime)} at ${formatCallTime(bookedTime)} ET`;
+    const subject = `Your Branviq call is confirmed - ${formatCallDate(bookedDate, bookedTime)} at ${formatCallTime(bookedTime)} ET`;
     const html = buildHtml(firstName, bookedDate, bookedTime);
     const raw = buildRawMessage(email, subject, html);
 
