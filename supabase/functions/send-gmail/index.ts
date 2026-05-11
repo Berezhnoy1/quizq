@@ -75,9 +75,29 @@ function formatCallTime(time: string): string {
   }
 }
 
+function buildCalendarUrl(date: string, time: string, firstName: string): string {
+  // Google Calendar event link: YYYYMMDDTHHMMSS format (no dashes/colons)
+  try {
+    const dt = new Date(`${date}T${time}:00`);
+    const end = new Date(dt.getTime() + 30 * 60 * 1000);
+    const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: "Branviq Vendor Call",
+      dates: `${fmt(dt)}/${fmt(end)}`,
+      details: `Branviq will call you at (866) 344-8881 to discuss joining.\n\nbranviq.com`,
+      ctz: "America/New_York",
+    });
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  } catch {
+    return "https://calendar.google.com";
+  }
+}
+
 function buildHtml(firstName: string, bookedDate: string, bookedTime: string): string {
   const dateStr = formatCallDate(bookedDate, bookedTime);
   const timeStr = formatCallTime(bookedTime);
+  const calUrl = buildCalendarUrl(bookedDate, bookedTime, firstName);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -140,6 +160,15 @@ function buildHtml(firstName: string, bookedDate: string, bookedTime: string): s
                         </td>
                       </tr>
                     </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:16px 24px 20px;text-align:center;border-top:1px solid #f3f4f6;">
+                    <a href="${calUrl}"
+                      style="display:inline-block;background:#eff6ff;color:#1e3a8a;font-size:13px;font-weight:600;
+                        text-decoration:none;padding:10px 24px;border-radius:8px;border:1px solid #dbeafe;">
+                      &#128197; Add to My Calendar
+                    </a>
                   </td>
                 </tr>
               </table>
