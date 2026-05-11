@@ -77,6 +77,9 @@
     transform: scale(1.02);
     box-shadow: 0 4px 20px -4px hsl(230 100% 58% / 0.18);
   }
+  .quiz-card--list.selected::after {
+    content: none;
+  }
 
   .btn-gradient {
     background: linear-gradient(135deg, hsl(230 100% 58%), hsl(230 100% 65%));
