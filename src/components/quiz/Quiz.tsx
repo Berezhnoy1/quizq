@@ -548,7 +548,7 @@ const CountryPicker = ({ selected, onSelect }: { selected: Country; onSelect: (c
                   placeholder="Search country or code…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
+                  className="flex-1 bg-transparent py-3 text-base outline-none placeholder:text-muted-foreground"
                 />
               </div>
             </div>
@@ -676,7 +676,7 @@ const Step8Form = ({
           <Checkbox
             checked={state.agreed}
             onCheckedChange={(c) => { setState((s) => ({ ...s, agreed: !!c })); clearError("agreed"); }}
-            className="mt-0.5 h-5 w-5 rounded data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            className="mt-0.5 h-5 w-5 rounded"
           />
           <span className="text-sm text-muted-foreground leading-relaxed">
             I agree with <a href="#" className="text-primary underline">the terms of use and the privacy policy</a> *

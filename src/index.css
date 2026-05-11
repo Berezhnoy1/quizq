@@ -56,6 +56,13 @@
     font-family: 'Sora', 'Inter', sans-serif;
     letter-spacing: -0.01em;
   }
+
+  /* Prevent iOS auto-zoom on input focus */
+  @supports (-webkit-touch-callout: none) {
+    select, input, textarea {
+      font-size: 16px !important;
+    }
+  }
 }
 
 @layer components {
@@ -77,7 +84,8 @@
     transform: scale(1.02);
     box-shadow: 0 4px 20px -4px hsl(230 100% 58% / 0.18);
   }
-  .quiz-card--list.selected::after {
+  .quiz-card--list.selected::after,
+  .quiz-card--checkbox.selected::after {
     content: none;
   }
 
