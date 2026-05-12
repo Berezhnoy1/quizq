@@ -9,9 +9,8 @@ Deno.serve(async (req) => {
 
   try {
     const BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
-    const CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID");
+    const CHAT_ID = "-5268358973";
     if (!BOT_TOKEN) throw new Error("TELEGRAM_BOT_TOKEN not configured");
-    if (!CHAT_ID) throw new Error("TELEGRAM_CHAT_ID not configured");
 
     const body = await req.json();
     const { first_name, phone, email, areas, team_size, booked_date, booked_time } = body;

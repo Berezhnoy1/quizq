@@ -75,6 +75,42 @@ function formatCallTime(time: string): string {
   }
 }
 
+function buildIcs(date: string, time: string, firstName: string, email: string): string {
+  try {
+    const dt = new Date(`${date}T${time}:00`);
+    const end = new Date(dt.getTime() + 30 * 60 * 1000);
+    const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const uid = `branviq-${date}-${time}-${email}`.replace(/[^a-zA-Z0-9@.-]/g, "");
+    const now = fmt(new Date());
+    return [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Branviq//Call Booking//EN",
+      "METHOD:REQUEST",
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${now}`,
+      `DTSTART;TZID=America/New_York:${date.replace(/-/g, "")}T${time.replace(/:/g, "")}00`,
+      `DTEND;TZID=America/New_York:${end.toISOString().slice(0, 10).replace(/-/g, "")}T${end.toISOString().slice(11, 19).replace(/:/g, "")}`,
+      `SUMMARY:Branviq Vendor Call`,
+      `DESCRIPTION:Branviq will call you from (866) 344-8881 to discuss joining.\\n\\nbranviq.com`,
+      `ORGANIZER;CN=Branviq:mailto:${IMPERSONATE}`,
+      `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=${firstName}:mailto:${email}`,
+      "STATUS:CONFIRMED",
+      "SEQUENCE:0",
+      `BEGIN:VALARM`,
+      `TRIGGER:-PT15M`,
+      `ACTION:DISPLAY`,
+      `DESCRIPTION:Branviq call in 15 minutes`,
+      `END:VALARM`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+  } catch {
+    return "";
+  }
+}
+
 function buildCalendarUrl(date: string, time: string, firstName: string): string {
   // Google Calendar event link: YYYYMMDDTHHMMSS format (no dashes/colons)
   try {
@@ -85,7 +121,7 @@ function buildCalendarUrl(date: string, time: string, firstName: string): string
       action: "TEMPLATE",
       text: "Branviq Vendor Call",
       dates: `${fmt(dt)}/${fmt(end)}`,
-      details: `Branviq will call you at (866) 344-8881 to discuss joining.\n\nbranviq.com`,
+      details: `Branviq will call you from (866) 344-8881 to discuss joining.\n\nbranviq.com`,
       ctz: "America/New_York",
     });
     return `https://calendar.google.com/calendar/render?${params.toString()}`;
@@ -156,7 +192,7 @@ function buildHtml(firstName: string, bookedDate: string, bookedTime: string): s
                         </td>
                         <td style="vertical-align:top;padding-left:12px;">
                           <p style="margin:0 0 2px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Phone</p>
-                          <p style="margin:0;font-size:16px;font-weight:600;color:#111827;">We'll call you at ${PHONE}</p>
+                          <p style="margin:0;font-size:16px;font-weight:600;color:#111827;">We'll call you from ${PHONE}</p>
                         </td>
                       </tr>
                     </table>
@@ -261,23 +297,35 @@ function encodeSubject(s: string): string {
   return `=?UTF-8?B?${encoded}?=`;
 }
 
-function buildRawMessage(to: string, subject: string, html: string): string {
+function buildRawMessage(to: string, subject: string, html: string, ics: string): string {
   const boundary = `boundary_${Date.now()}`;
-  const mime = [
+  const parts = [
     `From: Branviq <${IMPERSONATE}>`,
     `To: ${to}`,
     `Subject: ${encodeSubject(subject)}`,
     `MIME-Version: 1.0`,
-    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    `Content-Type: multipart/mixed; boundary="${boundary}"`,
     ``,
     `--${boundary}`,
     `Content-Type: text/html; charset=UTF-8`,
     `Content-Transfer-Encoding: 7bit`,
     ``,
     html,
-    ``,
-    `--${boundary}--`,
-  ].join("\r\n");
+  ];
+
+  if (ics) {
+    parts.push(
+      ``,
+      `--${boundary}`,
+      `Content-Type: text/calendar; charset=UTF-8; method=REQUEST`,
+      `Content-Transfer-Encoding: 7bit`,
+      ``,
+      ics,
+    );
+  }
+
+  parts.push(``, `--${boundary}--`);
+  const mime = parts.join("\r\n");
 
   // Gmail API requires URL-safe base64 without padding
   const raw = btoa(unescape(encodeURIComponent(mime)))
@@ -310,7 +358,8 @@ Deno.serve(async (req) => {
     const token = await getAccessToken(sa);
     const subject = `Your Branviq call is confirmed - ${formatCallDate(bookedDate, bookedTime)} at ${formatCallTime(bookedTime)} ET`;
     const html = buildHtml(firstName, bookedDate, bookedTime);
-    const raw = buildRawMessage(email, subject, html);
+    const ics = buildIcs(bookedDate, bookedTime, firstName, email);
+    const raw = buildRawMessage(email, subject, html, ics);
 
     const gmailRes = await fetch(
       `https://gmail.googleapis.com/gmail/v1/users/me/messages/send`,

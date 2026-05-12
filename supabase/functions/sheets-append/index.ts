@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
     const row = [
       dateStr,                          // A: Date
       firstName,                        // B: Name
-      phone,                            // C: Phone
+      phone ? `'${phone}` : "",          // C: Phone (apostrophe prevents formula parse)
       email,                            // D: Email
       areas,                            // E: Areas of Atlanta
       teamSize,                         // F: Team Size
