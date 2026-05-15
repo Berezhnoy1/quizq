@@ -310,6 +310,8 @@ const Step1 = ({ onNext }: { onNext: () => void }) => (
           alt="Appliance repair technician at work in Atlanta"
           width={1024}
           height={576}
+          fetchPriority="high"
+          decoding="async"
           className="w-full h-full object-cover object-top"
         />
       </div>
